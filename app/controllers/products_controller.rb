@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show update destroy ]
+  before_action :set_product, only: %i[ show update destroy inventories ]
 
   # GET /products
   def index
@@ -26,10 +26,21 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/1
   def update
-    if @product.update(product_params)
-      render json: @product
+    update_product(product_params)
+  end
+
+  # PATCH/PUT /products/1/inventories
+  def inventories
+    inventories = inventories_params[:inventories].map do |inventory|
+      Inventory.new(supplier: inventory[:supplier], quantity: inventory[:quantity], product: @product)
+    end
+
+    invalid_inventory = inventories.find { |inventory| !inventory.valid? }
+
+    if invalid_inventory.present?
+      render json: invalid_inventory.errors, status: :unprocessable_entity
     else
-      render json: @product.errors, status: :unprocessable_entity
+      update_product(inventories:)
     end
   end
 
@@ -40,12 +51,23 @@ class ProductsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
+  def set_product
+    @product = Product.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def product_params
-      params.require(:product).permit(:name, :price, :inventories)
+  def update_product(params)
+    if @product.update(params)
+      render json: @product
+    else
+      render json: @product.errors, status: :unprocessable_entity
     end
+  end
+
+  def product_params
+    params.require(:product).permit(:name, :price)
+  end
+
+  def inventories_params
+    params.require(:product).permit(inventories: [:supplier, :quantity])
+  end
 end

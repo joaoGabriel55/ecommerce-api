@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :orders
-  resources :products
+  resources :products do
+    member do
+      patch 'inventories'
+    end
+  end
   resources :inventories
 
   get "up" => "rails/health#show", as: :rails_health_check
