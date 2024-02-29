@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show update destroy inventories ]
+  before_action :set_product, only: %i[show update destroy inventories]
 
   # GET /products
   def index
@@ -50,7 +52,8 @@ class ProductsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
+  # Use callbacks to share common setup or constraints between actions.
   def set_product
     @product = Product.find(params[:id])
   end
@@ -68,6 +71,6 @@ class ProductsController < ApplicationController
   end
 
   def inventories_params
-    params.require(:product).permit(inventories: [:supplier, :quantity])
+    params.require(:product).permit(inventories: %i[supplier quantity])
   end
 end

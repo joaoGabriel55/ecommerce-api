@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe InventoriesController, type: :controller do
@@ -23,13 +25,13 @@ RSpec.describe InventoriesController, type: :controller do
 
     context 'with valid params' do
       it 'creates a new inventory' do
-        expect {
+        expect do
           post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, product_id: product.id } }
-        }.to change(Inventory, :count).by(1)
+        end.to change(Inventory, :count).by(1)
       end
 
       it 'returns a created response' do
-        post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, product_id: product.id} }
+        post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, product_id: product.id } }
         expect(response).to have_http_status(:created)
       end
     end
@@ -71,9 +73,9 @@ RSpec.describe InventoriesController, type: :controller do
     let!(:inventory) { create(:inventory, product: create(:product)) }
 
     it 'destroys the requested inventory' do
-      expect {
+      expect do
         delete :destroy, params: { id: inventory.to_param }
-      }.to change(Inventory, :count).by(-1)
+      end.to change(Inventory, :count).by(-1)
     end
   end
 end

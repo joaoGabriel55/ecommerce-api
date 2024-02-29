@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   resources :orders
   resources :products do
@@ -7,5 +9,5 @@ Rails.application.routes.draw do
   end
   resources :inventories
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
 end
