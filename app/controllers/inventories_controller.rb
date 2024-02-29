@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class InventoriesController < ApplicationController
-  before_action :set_inventory, only: %i[ show update destroy ]
+  before_action :set_inventory, only: %i[show update destroy]
 
   # GET /inventories
   def index
@@ -39,6 +41,7 @@ class InventoriesController < ApplicationController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_inventory
     @inventory = Inventory.find(params[:id])
@@ -46,6 +49,6 @@ class InventoriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def inventory_params
-    params.require(:inventory).permit(:supplier, :quantity, :product_id)
+    params.require(:inventory).permit(:supplier, :quantity, :products)
   end
 end

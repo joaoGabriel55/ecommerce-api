@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class OrdersController < ApplicationController
-  before_action :set_order, only: %i[ show update destroy ]
+  before_action :set_order, only: %i[show update destroy]
 
   # GET /orders
   def index
@@ -15,7 +17,9 @@ class OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = Order.new(order_params)
+    return render json: { message: 'Products not found' }, status: :unprocessable_entity if params[:order].nil?
+
+    @order = Order.new(products: load_products(order_params[:products]))
 
     if @order.save
       render json: @order, status: :created, location: @order
@@ -26,7 +30,13 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1
   def update
-    if @order.update(order_params)
+    new_products = load_products(params[:products])
+
+    return render json: { message: 'Products not found' }, status: :unprocessable_entity if new_products.empty?
+
+    updated_products = @order.products + new_products
+
+    if @order.update(products: updated_products)
       render json: @order
     else
       render json: @order.errors, status: :unprocessable_entity
@@ -39,13 +49,21 @@ class OrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def order_params
-      params.require(:order).permit(:price)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order
+    @order = Order.find(params[:id])
+  end
+
+  def load_products(products_param)
+    return [] if products_param.nil? || products_param.empty?
+
+    products_ids = products_param.map { |product| product[:id] }
+    Product.where(id: products_ids)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def order_params
+    params.require(:order).permit(products: %i[id])
+  end
 end

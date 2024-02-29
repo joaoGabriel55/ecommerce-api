@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ProductsController, type: :controller do
@@ -20,9 +22,9 @@ RSpec.describe ProductsController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new product' do
-        expect {
+        expect do
           post :create, params: { product: { name: 'Test Product', price: 10 } }
-        }.to change(Product, :count).by(1)
+        end.to change(Product, :count).by(1)
       end
 
       it 'returns a created response' do
@@ -72,7 +74,8 @@ RSpec.describe ProductsController, type: :controller do
           id: product.to_param,
           product: {
             inventories: [{ supplier: 'New Supplier', quantity: 10 }]
-          } }
+          }
+        }
         product.reload
 
         expect(product.inventories.first.supplier).to eq('New Supplier')
@@ -83,7 +86,8 @@ RSpec.describe ProductsController, type: :controller do
           id: product.to_param,
           product: {
             inventories: [{ supplier: 'New Supplier', quantity: 10 }]
-          } }
+          }
+        }
         expect(response).to be_successful
       end
     end
@@ -94,7 +98,8 @@ RSpec.describe ProductsController, type: :controller do
           id: product.to_param,
           product: {
             inventories: [{ supplier: nil, quantity: 10 }]
-          } }
+          }
+        }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -104,9 +109,9 @@ RSpec.describe ProductsController, type: :controller do
     let!(:product) { create(:product) }
 
     it 'destroys the requested product' do
-      expect {
+      expect do
         delete :destroy, params: { id: product.to_param }
-      }.to change(Product, :count).by(-1)
+      end.to change(Product, :count).by(-1)
     end
   end
 end
