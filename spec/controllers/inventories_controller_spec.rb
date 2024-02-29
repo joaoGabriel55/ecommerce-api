@@ -12,7 +12,7 @@ RSpec.describe InventoriesController, type: :controller do
 
   describe 'GET #show' do
     let!(:product) { create(:product) }
-    let(:inventory) { create(:inventory, product:) }
+    let(:inventory) { create(:inventory, products: [product]) }
 
     it 'returns a success response' do
       get :show, params: { id: inventory.to_param }
@@ -26,12 +26,12 @@ RSpec.describe InventoriesController, type: :controller do
     context 'with valid params' do
       it 'creates a new inventory' do
         expect do
-          post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, product_id: product.id } }
+          post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, products: [product] } }
         end.to change(Inventory, :count).by(1)
       end
 
       it 'returns a created response' do
-        post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, product_id: product.id } }
+        post :create, params: { inventory: { supplier: 'Supplier Nice', quantity: 10, products: [product] } }
         expect(response).to have_http_status(:created)
       end
     end
@@ -46,7 +46,7 @@ RSpec.describe InventoriesController, type: :controller do
 
   describe 'PATCH #update' do
     let!(:product) { create(:product) }
-    let(:inventory) { create(:inventory, product:) }
+    let(:inventory) { create(:inventory, products: [product]) }
 
     context 'with valid params' do
       it 'updates the requested inventory' do
@@ -70,7 +70,7 @@ RSpec.describe InventoriesController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:inventory) { create(:inventory, product: create(:product)) }
+    let!(:inventory) { create(:inventory, products: [create(:product)]) }
 
     it 'destroys the requested inventory' do
       expect do
