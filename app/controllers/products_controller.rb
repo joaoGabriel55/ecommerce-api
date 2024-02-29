@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/1/inventories
   def inventories
     inventories = inventories_params[:inventories].map do |inventory|
-      Inventory.new(supplier: inventory[:supplier], quantity: inventory[:quantity], product: @product)
+      Inventory.new(supplier: inventory[:supplier], quantity: inventory[:quantity], products: [@product])
     end
 
     invalid_inventory = inventories.find { |inventory| !inventory.valid? }

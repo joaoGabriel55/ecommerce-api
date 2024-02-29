@@ -1,6 +1,9 @@
-class Product < ApplicationRecord
-    validates :name, presence: true
-    validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+# frozen_string_literal: true
 
-    has_many :inventories, dependent: :destroy
+class Product < ApplicationRecord
+  validates :name, presence: true
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+
+  has_and_belongs_to_many :orders
+  has_and_belongs_to_many :inventories
 end
