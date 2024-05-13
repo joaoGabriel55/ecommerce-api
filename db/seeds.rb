@@ -1,10 +1,13 @@
 # frozen_string_literal: true
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+puts 'Creating seeds...'
+
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+
+product = Product.create(name: 'Product 1', price: 10)
+inventory = Inventory.create(products: [product], quantity: 10, supplier: 'Supplier' + Random.rand(1000).to_s)
+order_item = OrderItem.create(product:, inventory:, quantity: 2)
+
+Order.create(status: 'pending', order_items: [order_item])
+
+puts 'Done!'
