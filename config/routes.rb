@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :orders
+  resources :orders do
+    member do
+      patch 'confirm'
+    end
+  end
   resources :products do
     member do
       patch 'inventories'
