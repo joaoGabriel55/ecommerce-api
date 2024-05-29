@@ -65,6 +65,13 @@ FROM
 BEGIN TRANSACTION;
 
 UPDATE
+  orders
+SET
+  status = 'confirmed'
+WHERE
+  id = 1;
+
+UPDATE
   inventories
 SET
   quantity = quantity - (
@@ -90,13 +97,6 @@ WHERE
       order_items.inventory_id = inventories.id
       AND orders.id = 1
   );
-
-UPDATE
-  orders
-SET
-  status = 'confirmed'
-WHERE
-  id = 1;
 
 COMMIT;
 ```
