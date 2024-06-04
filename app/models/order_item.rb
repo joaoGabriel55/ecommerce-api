@@ -7,5 +7,4 @@ class OrderItem < ApplicationRecord
 
   belongs_to :product
   belongs_to :inventory
-  has_and_belongs_to_many :orders
 end
