@@ -3,6 +3,7 @@
 class CreateOrderItems < ActiveRecord::Migration[7.1]
   def change
     create_table :order_items do |t|
+      t.belongs_to :order
       t.references :product, null: false, foreign_key: true
       t.references :inventory, null: false, foreign_key: true
       t.integer :quantity
